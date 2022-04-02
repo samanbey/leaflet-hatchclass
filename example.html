@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Hatch fill in Leaflet?</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+		<script src="leaflet-hatchclass.js"></script>
+
+		<style>
+			#map_div {
+				width: 800px;
+				height: 600px;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div id="map_div"></div>
+		<script>
+			var map=L.map('map_div');
+            
+			var osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+			}).addTo(map);
+			
+            fetch('hun_counties_pop.geojson').then(r=>r.json()).then(d=>{
+                let l=L.geoJson(d,{ style: hatch }).addTo(map);
+                map.fitBounds(l.getBounds());
+            });			
+            
+			var h1=L.hatchClass(['red','white']);
+			var h2=L.hatchClass(['indigo','blue','green','yellow','orange','red'],4,30);
+			
+            function hatch(f) {
+				let p=f.properties.population;
+                return { className: p<500000?h1:h2, fillOpacity: .7 };
+            }
+		</script>
+	</body>
+</html>
