@@ -4,7 +4,7 @@
  * creates hatched fill classes for svg polygons to be used with Leaflet
  *
  * MIT License
- * Copyright (c) 2021 Gede Mátyás
+ * Copyright (c) 2022 Gede Mátyás
  */
  
 L.hatchClass = function(colors=['black', 'white'], strokeWidth=6, angle=45) {
