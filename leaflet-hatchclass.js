@@ -4,7 +4,7 @@
  * creates hatched fill classes for svg polygons to be used with Leaflet
  *
  * MIT License
- * Copyright (c) 2022 Gede Mátyás
+ * Copyright (c) 2021 Gede Mátyás
  */
  
 L.hatchClass = function(colors=['black', 'white'], strokeWidth=6, angle=45) {
@@ -24,14 +24,24 @@ L.hatchClass = function(colors=['black', 'white'], strokeWidth=6, angle=45) {
 	let defElem = svgElem.querySelector('defs');
 	let pElem = document.createElementNS('http://www.w3.org/2000/svg','pattern');
 	pElem.id = hcName;
-	let size = strokeWidth*colors.length;
+    // calculate size
+	//let size = strokeWidth*colors.length;
+    let size = 0;
+    for (let i = 0; i < colors.length; i++)
+        if (typeof colors[i] == 'object')
+            size += colors[i].width?colors[i].width:strokeWidth;
+        else
+            size += strokeWidth;
 	pElem.setAttribute('x',"0"); pElem.setAttribute('y', "0"); 
 	pElem.setAttribute('width', size); pElem.setAttribute('height', size); 
 	pElem.setAttribute('patternUnits', "userSpaceOnUse"); 
 	pElem.setAttribute('patternContentUnits', "userSpaceOnUse"); 
 	pElem.setAttribute('patternTransform', "rotate("+angle+")");
-	for (let i=0; i<colors.length; i++) {
-		pElem.innerHTML+='<path stroke="'+colors[i]+'" stroke-width="'+strokeWidth+'" d="M0 '+(i+.5)*strokeWidth+'h'+size+'" />';
+	for (let i = 0, y = 0; i<colors.length; i++) {
+		let c = (typeof colors[i] == 'object') ? colors[i].color : colors[i];
+        let sw = (typeof colors[i] == 'object' && colors[i].width) ? colors[i].width : strokeWidth
+        pElem.innerHTML+='<path stroke="'+c+'" stroke-width="'+sw+'" d="M0 '+(y + sw*.5)+'h'+size+'" />';
+        y += sw;
 	}
 	defElem.appendChild(pElem);
 	// create style element and add class style
@@ -41,3 +51,4 @@ L.hatchClass = function(colors=['black', 'white'], strokeWidth=6, angle=45) {
 	// return class name
 	return hcName;
 }
+

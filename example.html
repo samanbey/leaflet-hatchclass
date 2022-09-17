@@ -2,15 +2,19 @@
 <html>
 	<head>
 		<title>Hatch fill in Leaflet?</title>
-		<meta charset="utf-8">
+		<meta charset="utf-8" />
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 		<script src="leaflet-hatchclass.js"></script>
 
 		<style>
-			#map_div {
-				width: 800px;
-				height: 600px;
+			html, body {
+                height: 100%;
+                margin: 0;
+            }
+            #map_div {
+				width: 100%;
+				height: 100%;
 			}
 
 		</style>
@@ -18,10 +22,10 @@
 	<body>
 		<div id="map_div"></div>
 		<script>
-			var map=L.map('map_div');
+			const map=L.map('map_div');
             
-			var osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+			const osm=L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {
+				attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'
 			}).addTo(map);
 			
             fetch('hun_counties_pop.geojson').then(r=>r.json()).then(d=>{
@@ -29,12 +33,13 @@
                 map.fitBounds(l.getBounds());
             });			
             
-			var h1=L.hatchClass(['red','white']);
-			var h2=L.hatchClass(['indigo','blue','green','yellow','orange','red'],4,30);
+			let h0=L.hatchClass([{ color: 'red', width: 6 },{ color: 'white', width: 2 }]);
+			let h1=L.hatchClass(['red','white'],4);
+			let h2=L.hatchClass([{ color: 'red', width: 2 },{ color: 'white', width: 6 }]);
 			
             function hatch(f) {
 				let p=f.properties.population;
-                return { className: p<500000?h1:h2, fillOpacity: .7 };
+                return { className: p<400000?h0:p<800000?h1:h2, fillOpacity: .7, color: 'red', opacity: .4, weight: 1 };
             }
 		</script>
 	</body>
