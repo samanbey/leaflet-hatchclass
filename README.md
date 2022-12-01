@@ -13,3 +13,6 @@ see in `example.html`
 - `colors`: array of CSS colors or array of { color, width } objects. Default: `['black', 'white']`
 - `strokeWidth`: in pixels; defaults to 6
 - `angle`: in degrees; defaults to 45
+
+## live demo
+https://samanbey.github.io/leaflet-hatchclass/example.html
