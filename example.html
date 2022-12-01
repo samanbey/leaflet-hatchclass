@@ -1,46 +1,46 @@
 <!doctype html>
 <html>
-	<head>
-		<title>Hatch fill in Leaflet?</title>
-		<meta charset="utf-8" />
-		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-		<script src="leaflet-hatchclass.js"></script>
+    <head>
+        <title>Hatch fill in Leaflet?</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+        <script src="leaflet-hatchclass.js"></script>
 
-		<style>
-			html, body {
+        <style>
+            html, body {
                 height: 100%;
                 margin: 0;
             }
             #map_div {
-				width: 100%;
-				height: 100%;
-			}
+                width: 100%;
+                height: 100%;
+            }
 
-		</style>
-	</head>
-	<body>
-		<div id="map_div"></div>
-		<script>
-			const map=L.map('map_div');
+        </style>
+    </head>
+    <body>
+        <div id="map_div"></div>
+        <script>
+            const map=L.map('map_div');
             
-			const osm=L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {
-				attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'
-			}).addTo(map);
-			
+            const osm=L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {
+                attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'
+            }).addTo(map);
+            
             fetch('hun_counties_pop.geojson').then(r=>r.json()).then(d=>{
                 let l=L.geoJson(d,{ style: hatch }).addTo(map);
                 map.fitBounds(l.getBounds());
             });			
             
-			let h0=L.hatchClass([{ color: 'red', width: 6 },{ color: 'white', width: 2 }]);
-			let h1=L.hatchClass(['red','white'],4);
-			let h2=L.hatchClass([{ color: 'red', width: 2 },{ color: 'white', width: 6 }]);
-			
+            let h0=L.hatchClass([{ color: 'red', width: 6 },{ color: 'none', width: 2 }]);
+            let h1=L.hatchClass(['red','none'],4);
+            let h2=L.hatchClass([{ color: 'red', width: 2 },{ color: 'none', width: 6 }]);
+            
             function hatch(f) {
-				let p=f.properties.population;
+                let p=f.properties.population;
                 return { className: p<400000?h0:p<800000?h1:h2, fillOpacity: .7, color: 'red', opacity: .4, weight: 1 };
             }
-		</script>
-	</body>
+        </script>
+    </body>
 </html>
